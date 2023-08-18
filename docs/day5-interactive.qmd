@@ -42,3 +42,24 @@ expect_type(mean_range(mtcars), "double")
 expect_true(mean_range(mtcars)[1] <= mean_range(mtcars)[1])
 ```
 
+
+## Sourcing code
+
+```{r}
+source(here::here("src", "name_cart.R"))
+```
+
+```{r}
+name_cart("paella", "chinchilla")
+```
+
+### Sourcing Cork Oak function
+
+```{r}
+source(here::here("src", "cork_oak_growth.R"))
+```
+
+```{r}
+height_t2(50, 2, 5)
+```
+
