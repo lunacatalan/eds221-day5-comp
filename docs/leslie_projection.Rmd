@@ -22,7 +22,8 @@ Recall the Leslie matrix from EDS 212. Matrix multiplication (using the dot prod
 
 ```{r}
 # Make the Leslie Matrix:
-fish_leslie <- matrix(c(0, 0, 0, 600, 0.05, 0, 0, 0, 0, 0.20, 0, 0, 0, 0, 0.16, 0.9), nrow = 4, ncol = 4, byrow = TRUE)
+fish_leslie <- matrix(c(0, 0, 0, 600, 0.05, 0, 0, 0, 0, 0.20, 0, 0, 0, 0, 0.16, 0.9), 
+                      nrow = 4, ncol = 4, byrow = TRUE)
 
 # Check it out: 
 fish_leslie
@@ -31,7 +32,7 @@ fish_leslie
 The initial population structure is given by: 
 ```{r}
 # Initial population structure (Roe, Fry, Juvenile, Adult): 
-fish_year0 <- c(5000, 8000, 600, 400)
+fish_year0 <- c(5000, 50, 600, 20)
 ```
 
 
@@ -43,16 +44,16 @@ Add line-by-line comments wheres prompted in the code below, explaining what eac
 # ------ WHAT HAPPENS HERE? ------ #
 # ------ comment line-by-line ---- #
 
-# The line below...
-time_yr <- seq(from = 0, to = 8, by = 1)
+# The line below making a vector from 0-8 by 1
+time_yr <- seq(from = 0, to = 8, by = 1) 
 
-# The line below...
-proj_year <- matrix(ncol = length(fish_year0), nrow = length(time_yr))
+# The line below making an empty matrix that will store the values from the function. This will have the number of fish_year0 columns (4), and number of time_yr rows (9)
+proj_year <- matrix(ncol = length(fish_year0), nrow = length(time_yr)) 
 
-# The line below...
+# The line below will populate the first row of the proj_year matrix using fish_year0 values
 proj_year[1, ] <- fish_year0
 
-# The for loop below...
+# The for loop below starts at row 2 to populate matrix, and will iterate over the rest of the rows (length of time_yr). For every row, it will populate with the output of the dot product for fish_leslie and the previous year information [i-1]
 for (i in 2:length(time_yr)) {
   proj_year[i,] <- fish_leslie %*% proj_year[i-1,]
 }
@@ -62,9 +63,12 @@ for (i in 2:length(time_yr)) {
 colnames(proj_year) <- c("eggs", "fry", "juvenile", "adult")
 
 proj_df <- data.frame(time_yr, proj_year) %>% 
-  pivot_longer(cols = -time_yr, names_to = "lifestage", values_to = "stage_population")
+  pivot_longer(cols = -time_yr, 
+               names_to = "lifestage", 
+               values_to = "stage_population")
 
-ggplot(data = proj_df, aes(x = time_yr, y = stage_population)) +
+ggplot(data = proj_df, 
+       aes(x = time_yr, y = stage_population)) +
   geom_line(aes(color = lifestage)) +
   scale_y_log10()
 
